@@ -163,5 +163,5 @@ cython_debug/
 storage/
 
 # Others
-src/services/Client.py
 src/services/database/instance.py
+src/blablabla.py
