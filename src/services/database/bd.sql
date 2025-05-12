@@ -1,15 +1,15 @@
 CREATE DATABASE sistema;
 
+CREATE TABLE IF NOT EXISTS loja (
+    cnpj CHAR(14) PRIMARY KEY,
+    nome VARCHAR(80) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS usuario (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(80) NOT NULL,
     cnpj_loja CHAR(14) NOT NULL REFERENCES loja(cnpj),
     senha VARCHAR(200) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS loja (
-    cnpj CHAR(14) PRIMARY KEY,
-    nome VARCHAR(80) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS funcionario (
