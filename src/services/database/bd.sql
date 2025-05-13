@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS venda (
     id_vendedor SERIAL REFERENCES funcionario(id)
 );
 
-CREATE  MATERIALIZED VIEW faturamento_diario AS 
+CREATE MATERIALIZED VIEW faturamento_diario AS 
 SELECT data_venda AS dia, SUM(montante) AS total 
 from venda 
 group by dia 
