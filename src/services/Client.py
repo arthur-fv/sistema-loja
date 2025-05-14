@@ -1,5 +1,5 @@
 import asyncpg
-from database.instance import *
+from .database.instance import *
 
 
 class Client():
@@ -8,15 +8,15 @@ class Client():
         self.pool = pool
     
     @classmethod
-    async def create_pool(cls):
+    async def create_pool(cls, min_sixe: int, max_sixe: int):
         pool = await asyncpg.create_pool(
             host    =HOSTNAME, 
             port    =PORT, 
             user    =USERNAME, 
-            database=DATABASE,
+            database=DATABASE, 
             password=PASSWORD, 
-            min_size=1, 
-            max_size=10
+            min_size=min_sixe, 
+            max_size=max_sixe
         )
         return cls(pool)
     
@@ -34,9 +34,9 @@ class Client():
                                     nome: str, 
                                     salario: float, 
                                     funcao='', 
-                                    id_gerente=''):
+                                    id_gerente=None):
         async with self.pool.acquire() as conn:
-            await conn.execute('INSERT INTO funcionario(nome, funcao, salario, id_genrente) VALUES($1, $2, $3, $4)',
+            await conn.execute('INSERT INTO funcionario(nome, funcao, salario, id_gerente) VALUES($1, $2, $3, $4)',
                          nome, 
                          funcao, 
                          salario, 
@@ -90,9 +90,12 @@ class Client():
             resultado = await conn.fetch('SELECT * venda WHERE data_venda = CURRENT_DATE')
         return resultado
     
-    async def fetch_vendedores_ativos(self, cnpj: str):
+    async def fetch_nome_vendedores_ativos(self, cnpj: str):
         async with self.pool.acquire() as conn:
-            records = await conn.fetch('SELECT * FROM trabalha_em WHERE cnpj = $1 AND fim IS NULL', 
+            records = await conn.fetch('SELECT f.nome FROM trabalha_em AS t ' \
+                                       'INNER JOIN funcionarios AS f' \
+                                       'ON t.id_funcionario = f.id ' \
+                                       'WHERE t.cnpj = $1', 
                                       cnpj
                             )
-            
+        return records
