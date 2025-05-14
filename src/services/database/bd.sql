@@ -53,3 +53,5 @@ SELECT DATE_TRUNC('year', data_venda) AS ano, SUM(montante) AS total
 from venda 
 group by ano 
 WITH DATA;
+
+ALTER TABLE funcionario ADD CONSTRAINT chk_funcao CHECK (funcao in ('G', 'C', 'V', 'E', 'S'));
