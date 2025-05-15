@@ -1,6 +1,6 @@
 import asyncpg
 from .database.instance import *
-
+from .util.tunnel import ssh_bind_local_port
 
 class Client():
 
@@ -11,7 +11,7 @@ class Client():
     async def create_pool(cls, min_sixe: int, max_sixe: int):
         pool = await asyncpg.create_pool(
             host    =HOSTNAME, 
-            port    =PORT, 
+            port    =ssh_bind_local_port(HOSTNAME, PORT), 
             user    =USERNAME, 
             database=DATABASE, 
             password=PASSWORD, 
