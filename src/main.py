@@ -2,12 +2,16 @@ import flet as ft
 
 from routes import ROUTES
 
-def main(page: ft.Page):
+from services.Client import Client
+
+async def main(page: ft.Page):
+
+    pool = await Client.create_pool(min_sixe=1, max_sixe=10)
 
     def route_change(route: ft.RouteChangeEvent):
         page.views.clear()
         new = ROUTES[route.route]
-        page.views.append(ft.View(controls=[new(page)]))
+        page.views.append(ft.View(controls=[new(page, pool)]))
         page.update()
     
     def view_pop(view):
