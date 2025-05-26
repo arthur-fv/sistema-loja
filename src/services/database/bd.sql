@@ -30,11 +30,11 @@ CREATE TABLE IF NOT EXISTS trabalha_em (
 
 CREATE TABLE IF NOT EXISTS venda (
     id SERIAL PRIMARY KEY,
+    id_vendedor SERIAL REFERENCES funcionario(id), 
     montante REAL NOT NULL,
-    data_venda DATE NOT NULL DEFAULT CURRENT_DATE,
     met_pag VARCHAR(8) NOT NULL,
-    horario TIME NOT NULL DEFAULT CURRENT_TIME,
-    id_vendedor SERIAL REFERENCES funcionario(id)
+    horario TIME NOT NULL DEFAULT CURRENT_TIME, 
+    data_venda DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 CREATE MATERIALIZED VIEW faturamento_diario AS 
