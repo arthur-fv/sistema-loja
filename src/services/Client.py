@@ -1,6 +1,5 @@
 import asyncpg
 from .database.instance import *
-from .util.tunnel import ssh_bind_local_port
 
 class Client():
 
@@ -8,15 +7,15 @@ class Client():
         self.pool = pool
     
     @classmethod
-    async def create_pool(cls, min_sixe: int, max_sixe: int):
+    async def create_pool(cls, min_size: int, max_size: int):
         pool = await asyncpg.create_pool(
             host    =HOSTNAME, 
-            port    =ssh_bind_local_port(HOSTNAME, PORT), 
+            port    =PORT, 
             user    =USERNAME, 
             database=DATABASE, 
             password=PASSWORD, 
-            min_size=min_sixe, 
-            max_size=max_sixe
+            min_size=min_size, 
+            max_size=max_size
         )
         return cls(pool)
     
@@ -66,12 +65,14 @@ class Client():
             )
     
     async def cadastrar_venda(self, 
+                              id_vendedor: int,
                               montante: float, 
-                              id_vendedor: int):
+                              met_pag: str):
         async with self.pool.acquire() as conn:
-            await conn.execute('INSERT INTO venda(montante, id_vendedor) VALUES($1, $2)',
-                         montante,
-                         id_vendedor
+            await conn.execute('INSERT INTO venda(id_vendedor, montante, met_pag) VALUES($1, $2, $3)',
+                         id_vendedor, 
+                         montante, 
+                         met_pag
             )
 
             
