@@ -39,7 +39,6 @@ def info_venda(on_click_add_button):
                         dropdown.Option('PIX'),
                         dropdown.Option('DEBITO'), 
                         dropdown.Option('CREDITO'),
-                        dropdown.Option('BOLETO'),
                     ],
                     color=Colors.BLACK,
                     bgcolor=Colors.GREY_400,
