@@ -6,7 +6,7 @@ from services.Client import Client
 
 async def main(page: ft.Page):
 
-    pool = await Client.create_pool(min_sixe=1, max_sixe=10)
+    pool = await Client.create_pool(min_size=1, max_size=10)
 
     def route_change(route: ft.RouteChangeEvent):
         page.views.clear()
