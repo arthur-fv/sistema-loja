@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS venda (
     id SERIAL PRIMARY KEY,
     montante REAL NOT NULL,
     data_venda DATE NOT NULL DEFAULT CURRENT_DATE,
+    met_pag VARCHAR(8) NOT NULL,
     horario TIME NOT NULL DEFAULT CURRENT_TIME,
     id_vendedor SERIAL REFERENCES funcionario(id)
 );
