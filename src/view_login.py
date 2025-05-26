@@ -1,13 +1,13 @@
 import flet as ft
 
-from services.func_login_usuario import func_login_usuario
+from asyncio import sleep
+
 from widgets.buttons.btn_check import btn_check
 from widgets.buttons.btn_close import btn_close
 
-from asyncio import sleep
+from services.Client import Client
 
-def view_login(page: ft.Page):
-    page.route = '/login'
+def view_login(page: ft.Page, client: Client):
     page.title = 'Login'
     page.window.width = 600
     page.window.height = 500
@@ -16,21 +16,23 @@ def view_login(page: ft.Page):
     page.padding = 5
     page.update()
 
-    async def on_click_btn_login(e):
+    async def on_click_btn_login(e: ft.ControlEvent):
         btn_entrar.visible = False
         anel_carregamento.visible = True # faz o botão ser 'trocado' pelo anel de carregamento
         page.update()
-        if await func_login_usuario(usuario_input.value.strip(), senha_input.value.strip()):
-            anel_carregamento.visible = False
-            btn_confimado.visible = True # logou
-            page.go('/painel_controle')
-        else:
-            btn_cancelado.visible = True # log errado
-            anel_carregamento.visible = False
-            page.update()
-            await sleep(1.5)
-            btn_cancelado.visible = False
-            btn_entrar.visible = True
+
+        with await client.pool.acquire() as conn:
+            if await conn.login(usuario_input.value.strip(), senha_input.value):
+                anel_carregamento.visible = False
+                btn_confimado.visible = True # logou
+                page.go('/painel_controle')
+            else:
+                btn_cancelado.visible = True # log errado
+                anel_carregamento.visible = False
+                page.update()
+                await sleep(1.5)
+                btn_cancelado.visible = False
+                btn_entrar.visible = True
         page.update()
 
     usuario_input = ft.TextField(label='Usuário', width=300)

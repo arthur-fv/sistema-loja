@@ -7,23 +7,23 @@ from widgets.tabela_vendas      import tabela_vendas
 from widgets.buttons.btn_check  import btn_check
 from widgets.buttons.btn_delete import btn_delete
 
-from services.func_cadastrar_vendas_confirmadas import func_cadastrar_vendas_confirmadas
+from services.Client import Client
 
-def view_cadastro_vendas(page: ft.Page):
-    page.title = 'Cadastrado Vendas'
+async def view_cadastro_vendas(page: ft.Page, client: Client):
+    page.title = "Cadastrado Vendas"
     page.window.center()
     page.bgcolor = ft.Colors.BLUE_GREY_900
     page.padding = 5
     page.update()
     
-    def on_click_DELETE(e):
+    def on_click_DELETE(e: ft.ControlEvent):
         for i in range(len(tabela.controls[0].rows)-1, -1, -1):
             if tabela.controls[0].rows[i].cells[3].content.value:
                 tabela.controls[0].rows.pop(i)
-        tabela.controls[0].columns[3] = ft.DataColumn(ft.Text('', width=40))
+        tabela.controls[0].columns[3] = ft.DataColumn(ft.Text("", width=40))
         tabela.update()
 
-    def on_change_DELETE_visible(e):
+    def on_change_DELETE_visible(e: ft.ControlEvent):
         if e.control.value:
             tabela.controls[0].columns[3] = ft.DataColumn(btn_delete(on_click_func=on_click_DELETE))
         else:
@@ -32,16 +32,16 @@ def view_cadastro_vendas(page: ft.Page):
                  selected = (selected or row.cells[3].content.value)
                  if selected: break
             if not selected:
-                tabela.controls[0].columns[3] = ft.DataColumn(ft.Text('', width=40))
+                tabela.controls[0].columns[3] = ft.DataColumn(ft.Text("", width=40))
         tabela.update()
 
-    def on_click_add_button(e):
+    def on_click_add_button(e: ft.ControlEvent):
         nome_vendedor = e.control.parent.controls[0].value
         valor_venda = float(e.control.parent.controls[1].value)
         met_pag = e.control.parent.controls[2].value
-        e.control.parent.controls[0].value = '' 
-        e.control.parent.controls[1].value = ''
-        e.control.parent.controls[2].value = ''
+        e.control.parent.controls[0].value = "" 
+        e.control.parent.controls[1].value = ""
+        e.control.parent.controls[2].value = ""
         informacoes.update()
         if bool(valor_venda) and bool(nome_vendedor):
             tmn_txt, cor_txt = 20, ft.Colors.BLACK
@@ -56,13 +56,13 @@ def view_cadastro_vendas(page: ft.Page):
                                 )
         tabela.update()
 
-    async def on_click_confirm_button(e):
-        conteudo_linhas = []
-        for j in range(len(tabela.controls[0].rows)):
-            conteudo_linhas.append([tabela.controls[0].rows[j].cells[i].content.value for i in range(3)])
-        mensagem = await func_cadastrar_vendas_confirmadas(conteudo_linhas)
-        print(mensagem) #DECIDA O QUE VOCÊ VAI FAZER COM ESSA BOMBA
+    async def on_click_confirm_button(e: ft.ControlEvent):
+        with await client.pool.acquire() as conn:
+            async for j in range(len(tabela.controls[0].rows)):
+                venda = [tabela.controls[0].rows[j].cells[i].content.value for i in range(3)] # [nome_vendedor, valor_venda, met_pag]
+                await conn.cadastrar_venda(venda[0], venda[1], venda[2])
 
+    nomes_vendedores = await client.fetch_nome_vendedores_ativos(cnpj) # rever modelamento
     informacoes = info_venda(on_click_add_button)
     tabela = tabela_vendas()
     btn_cadastrar_vendas = btn_check(100, on_click_confirm_button)
@@ -108,7 +108,7 @@ def view_cadastro_vendas(page: ft.Page):
     
     layout = ft.Row(
         controls=[
-            barra_lateral(page.go, '/painel_controle'),
+            barra_lateral(page.go, "/painel_controle"),
             ft.Column(
                 controls=[
                     base
