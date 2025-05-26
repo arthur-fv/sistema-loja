@@ -1,20 +1,16 @@
 from flet import Text, Colors, FontWeight, Dropdown, TextStyle, dropdown, TextField, KeyboardType, IconButton, Icons, Column, Row, MainAxisAlignment
 from asyncio import run
 
-from services.func_get_vendedores import func_get_vendedores
 
-
-def info_venda(on_click_add_button):
+def info_venda(on_click_add_button, nomes_vendedores: list):
 
     cabecalho = Text('INFORMAÇÕES DA VENDA', color=Colors.BLACK, weight=FontWeight.W_900)
-
-    nomes = run(func_get_vendedores()) # resgata os nomes no banco de dados
 
     tfield_vendedor = Dropdown(
                     label='Vendedor(a)',
                     label_style=TextStyle(color=Colors.BLACK),
                     icon_enabled_color=Colors.BLACK,
-                    options=[dropdown.Option(nome) for nome in nomes],
+                    options=[dropdown.Option(nome) for nome in nomes_vendedores],
                     color=Colors.BLACK,
                     bgcolor=Colors.GREY_400,
                     border_color=Colors.BLACK,
