@@ -2,7 +2,7 @@ import flet as ft
 
 from widgets.barra_lateral import barra_lateral
 
-def pg_painel_controle(page: ft.Page):
+def view_painel_controle(page: ft.Page):
     page.title = "Painel de Controle"
     page.window.center()
     page.bgcolor = ft.Colors.BLUE_GREY_900

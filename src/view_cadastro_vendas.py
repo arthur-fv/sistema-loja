@@ -9,7 +9,7 @@ from widgets.buttons.btn_delete import btn_delete
 
 from services.func_cadastrar_vendas_confirmadas import func_cadastrar_vendas_confirmadas
 
-def pg_cadastro_vendas(page: ft.Page):
+def view_cadastro_vendas(page: ft.Page):
     page.title = 'Cadastrado Vendas'
     page.window.center()
     page.bgcolor = ft.Colors.BLUE_GREY_900

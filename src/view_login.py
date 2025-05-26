@@ -6,7 +6,7 @@ from widgets.buttons.btn_close import btn_close
 
 from asyncio import sleep
 
-def pg_login(page: ft.Page):
+def view_login(page: ft.Page):
     page.route = '/login'
     page.title = 'Login'
     page.window.width = 600

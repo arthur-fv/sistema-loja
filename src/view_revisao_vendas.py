@@ -4,7 +4,7 @@ import asyncpg
 
 from widgets.barra_lateral import barra_lateral
 
-async def pg_revisao_vendas(page: ft.Page):
+async def view_revisao_vendas(page: ft.Page):
     page.window.center()
     page.bgcolor = ft.Colors.BLUE_GREY_900
     page.padding = 5
